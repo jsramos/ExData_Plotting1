@@ -48,7 +48,7 @@ rm(raw)
 
 # Create 1st Plot on PNG graphic device
 par(mar=c(4,4,2,2))
-png("plot1.png", width = 480, height = 480)
+png("plot1.png", width = 480, height = 480, bg = "transparent")
 with(pcdata, hist(Global_active_power, col="red", xlab = "Global Active Power (kilowatts)", 
                   ylim = c(0,1200), main="Global Active Power"))
 
