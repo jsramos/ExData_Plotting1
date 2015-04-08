@@ -4,7 +4,6 @@
 # The plot is created as part of Course Project 1 for the 'Exploratory Data Analysis' Coursera MOOC.
 
 # Load required libraries
-library(data.table)
 library(dplyr)
 library(lubridate)
 
@@ -13,18 +12,17 @@ pcZipUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_pow
 datafile <- "household_power_consumption.txt"
 temp <- tempfile()
 download.file(pcZipUrl, temp, method = "curl")
-unz(temp, datafile)
 # Coerce columns to character or number accordingly, with NA character specified as '?'.
 # fread function runs faster, but has a documented issue correctly understanding argument 'na.strings=x'
 # so using it implies manual conversion of '?' characters, which is inconvenient.
-raw <- read.csv(datafile, sep = ";",header = T, stringsAsFactors=F, na.strings=c("?","NA"), 
+raw <- read.csv(unz(temp, datafile), sep = ";",header = T, stringsAsFactors=F, na.strings=c("?","NA"), 
              colClasses=c(rep("character", 2), rep("numeric", 7)))
 # Stops using temp file and frees resources
 unlink(temp)
-baseDir <- "./"
+closeAllConnections()
 
 # Validate load
-if (nrow(raw != 2075259) & ncol(raw) != 9) {
+if (nrow(raw) != 2075259 & ncol(raw) != 9) {
         stop("Verify the data has been downloaded correctly. There should be 2075259 rows and 9 columns")
 }
 
@@ -38,7 +36,7 @@ interval <- new_interval(ymd_hms("2007-02-01 00:00:00"), ymd_hms("2007-02-02 23:
 pcdata <- raw %>% filter(timestamp %within% interval)
 
 # Validate filtering
-if (nrow != 2880) {
+if (nrow(pcdata) != 2880) {
         stop("There is a problem with your subsetting. There should be 2880 observations.")
 }
 
@@ -50,7 +48,7 @@ rm(raw)
 
 # Create 1st Plot on PNG graphic device
 par(mar=c(4,4,2,2))
-png("plot1.png", width = 480, height = 480, bg = "white")
+png("plot1.png", width = 480, height = 480)
 with(pcdata, hist(Global_active_power, col="red", xlab = "Global Active Power (kilowatts)", 
                   ylim = c(0,1200), main="Global Active Power"))
 
