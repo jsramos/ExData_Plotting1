@@ -4,8 +4,8 @@
 # The plot is created as part of Course Project 1 for the 'Exploratory Data Analysis' Coursera MOOC.
 
 # Load required libraries
-library(dplyr)
-library(lubridate)
+require(dplyr)
+require(lubridate)
 
 # Automatically download and read data
 pcZipUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
