@@ -1,47 +1,14 @@
-# Plot3.R
+# Plot2.R
 # This script creates the plot as it appears on 
 # https://github.com/rdpeng/ExData_Plotting1/blob/master/figure/unnamed-chunk-4.png
 # The plot is created as part of Course Project 1 for the 'Exploratory Data Analysis' Coursera MOOC.
 
-# Load required libraries and crash if not installed
-require(dplyr)
-require(lubridate)
-
-# Automatically download and read data
-pcZipUrl <- "https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip"
-datafile <- "household_power_consumption.txt"
-temp <- tempfile()
-download.file(pcZipUrl, temp, method = "curl")
-# Coerce columns to character or number accordingly, with NA character specified as '?'.
-# fread function runs faster, but has a documented issue correctly understanding argument 'na.strings=x'
-# so using it implies manual conversion of '?' characters, which is inconvenient.
-raw <- read.csv(unz(temp, datafile), sep = ";",header = T, stringsAsFactors=F, na.strings=c("?","NA"), 
-                colClasses=c(rep("character", 2), rep("numeric", 7)))
-# Stops using temp file and frees resources
-unlink(temp)
-closeAllConnections()
-
-# Validate load
-if (nrow(raw) != 2075259 & ncol(raw) != 9) {
-        stop("Verify the data has been downloaded correctly. There should be 2075259 rows and 9 columns")
+# Execute common code for all plots in file 'prepare_data.R'
+if (file.exists("prepare_data.R")) {
+        source("prepare_data.R")
+} else {
+        stop("File 'prepare_data.R' is missing. This file is in charge of downloading, cleaning and preparing the data for plotting, so it´s critical.")
 }
-
-# Create timestamp from Date and Time columns
-raw <- raw %>% mutate(timestamp = parse_date_time(paste(Date, Time), "%d/%m/%Y %H:%M:%S"))
-
-# Filter out data only for dates between February 1st and 2nd, 2007.
-# Lubridate interval between 1st hour of Feb 1st and last minute of Feb 2nd.
-interval <- new_interval(ymd_hms("2007-02-01 00:00:00"), ymd_hms("2007-02-02 23:59:59"))
-# Filter out observations outside interval
-pcdata <- raw %>% filter(timestamp %within% interval)
-
-# Validate filtering
-if (nrow(pcdata) != 2880) {
-        stop("There is a problem with your subsetting. There should be 2880 observations.")
-}
-
-# Remove unnecessary objects from memory
-rm(raw)
 
 # Backup current base graphics defaults except for RO properties
 .pardefault <- par(no.readonly = T)
