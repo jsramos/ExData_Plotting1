@@ -1,6 +1,6 @@
-# Plot2.R
+# Plot3.R
 # This script creates the plot as it appears on 
-# https://github.com/rdpeng/ExData_Plotting1/blob/master/figure/unnamed-chunk-3.png
+# https://github.com/rdpeng/ExData_Plotting1/blob/master/figure/unnamed-chunk-4.png
 # The plot is created as part of Course Project 1 for the 'Exploratory Data Analysis' Coursera MOOC.
 
 # Load required libraries and crash if not installed
@@ -48,8 +48,14 @@ rm(raw)
 
 # Create 1st Plot on PNG graphic device
 par(mar=c(4,4,2,2))
-png("plot2.png", width = 480, height = 480, bg = "transparent")
-with(pcdata, plot(Global_active_power ~ timestamp, type = "l", xlab="", ylab="Global Active Power (kilowatts)"))
+png("plot3.png", width = 480, height = 480, bg = "transparent")
+with(pcdata, {
+        plot(Sub_metering_1 ~ timestamp, type = "l", xlab="", ylab="Energy sub metering")
+        lines(Sub_metering_2 ~ timestamp, col = "red")
+        lines(Sub_metering_3 ~ timestamp, col = "blue")
+        legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col = c("black", "red", "blue"), lty = c(1,1))
+        })
+
 
 # Close the graphics device
 dev.off()
